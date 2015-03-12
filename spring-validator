@@ -1,0 +1,400 @@
+import org.springframework.validation.Validator;
+
+
+    @Autowired
+    private transient Validator validator;
+	
+	
+	
+	
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(genericReportSearch, "genericReportSearch");
+        try {
+            validator.validate(genericReportSearch, errors);
+        }
+		
+		
+// *********************genericReportSearch class
+
+
+package com.staralliance.pai.report.domain;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
+
+
+public class GenericReportSearch implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+
+	private String recordType;
+
+	private String ope;
+
+	private String ffp;
+
+	@Pattern(regexp = "^$|^[0-9]+$", message = "Ticket Number can accept only Numeric values")
+    @Size(min = 0, max = 13, message = "Ticket Number cannot exceed 13 characters")
+    private String ticketNumber;
+	
+    @Pattern(regexp = "^$|^[a-zA-Z0-9.]+$", message = "FFP Number can accept only Alpha numeric values")
+    @Size(min = 0, max = 20, message = "FFP Number cannot exceed 20 characters")
+    private String ffpNumber;
+
+    @Pattern(regexp = "^$|^[0-9]+$", message = "DSN can accept only Numeric values")
+    @Size(min = 0, max = 5, message = "DSN cannot exceed 5 characters")
+	private String dsn;
+
+	private String oan;
+
+	private String irn;
+
+	private Date startDate;
+
+	private Date endDate;
+
+	private Date departureDate;
+
+    @Pattern(regexp = "^$|^[0-9]+$", message = "Operating airline Flight number can accept only Numeric values")
+    @Size(min = 0, max = 5, message = "OPE Flight Number cannot exceed 5 characters")
+	private String opFlightNum;
+
+    @Pattern(regexp = "^$|^[a-zA-Z0-9]+$", message = "Origin Airport Code can accept only Alpha numeric values")
+    @Size(min = 0, max = 5, message = "Origin Airport Code cannot exceed 5 characters")
+	private String origin;
+
+    @Pattern(regexp = "^$|^[a-zA-Z0-9]+$", message = "Destination Airport Code can accept only Alpha numeric values")
+    @Size(min = 0, max = 5, message = "Destination Airport Code cannot exceed 5 characters")
+	private String destination;
+
+	private String status;
+
+	@Pattern(regexp = "^$|^[0-9]+$", message = "Error code can accept only Numeric values")
+    @Size(min = 0, max = 3, message = "Error code cannot exceed 3 characters")
+	private String errorCode;
+
+	/** The ope list. */
+	private List<String> opeList;
+
+	/** The ffp list. */
+	private List<String> ffpList;
+
+	private List<String> recList;
+
+	private List<String> statusList;
+
+	private boolean showAllDetails;
+
+	private String receiverAlertCode;
+
+	private String senderAlertCode;
+
+	private String fileName;
+	
+	private String role;
+	
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getRecordType() {
+		return recordType;
+	}
+
+	public List<String> getStatusList() {
+		return statusList;
+	}
+
+	public void setStatusList(List<String> statusList) {
+		this.statusList = statusList;
+	}
+
+	public void setRecordType(String recordType) {
+		this.recordType = recordType;
+	}
+
+	public String getOpe() {
+		return ope;
+	}
+
+	public void setOpe(String ope) {
+		this.ope = ope;
+	}
+
+	public String getFfp() {
+		return ffp;
+	}
+
+	public void setFfp(String ffp) {
+		this.ffp = ffp;
+	}
+
+	public String getFfpNumber() {
+		return ffpNumber;
+	}
+
+	public void setFfpNumber(String ffpNumber) {
+
+		/*if (ffpNumber != null && ffpNumber.length() > 0) {
+			this.ffpNumber = ffpNumber.trim();
+
+			while ('0' == this.ffpNumber.charAt(0)) {
+				this.ffpNumber = ffpNumber.replaceFirst("0", "");
+			}
+		} else {
+			this.ffpNumber = ffpNumber;
+		}*/
+		this.ffpNumber = ffpNumber;
+	}
+
+	public String getDsn() {
+		return dsn;
+	}
+
+	public void setDsn(String dsn) {
+		/*if (dsn != null && dsn.length() > 0) {
+			this.dsn = dsn.trim();
+
+			while ('0' == this.dsn.charAt(0)) {
+				this.dsn = dsn.replaceFirst("0", "");
+			}
+		} else {
+			this.dsn = dsn;
+		}*/
+		this.dsn = dsn;
+	}
+
+	public String getOan() {
+		return oan;
+	}
+
+	public void setOan(String oan) {
+
+		/*if (oan != null && oan.length() > 0) {
+			this.oan = oan.trim();
+
+			while ('0' == this.oan.charAt(0)) {
+				this.oan = oan.replaceFirst("0", "");
+			}
+		} else {
+			this.oan = oan;
+		}*/
+		this.oan = oan;
+
+	}
+
+	public String getIrn() {
+		return irn;
+	}
+
+	public void setIrn(String irn) {/*
+									 * if (irn != null && irn.length() > 0) {
+									 * this.irn = irn.trim();
+									 * 
+									 * while ('0' == this.irn.charAt(0)) {
+									 * this.irn = irn.replaceFirst("0", ""); } }
+									 * else { this.irn = irn; }
+									 */
+		this.irn = irn;
+	}
+
+	public Date getStartDate() {
+		/*if (this.startDate == null) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(new Date());
+			calendar.set(11, 0);
+			calendar.set(12, 0);
+			calendar.set(13, 0);
+			calendar.set(14, 0);
+			this.startDate = calendar.getTime();
+		}*/
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		/*if (this.endDate == null) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(new Date());
+			calendar.set(11, 0);
+			calendar.set(12, 0);
+			calendar.set(13, 0);
+			calendar.set(14, 0);
+			this.endDate = calendar.getTime();
+		}*/
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public Date getDepartureDate() {
+		/*
+		 * if (this.departureDate == null) { Calendar calendar =
+		 * Calendar.getInstance(); calendar.setTime(new Date());
+		 * calendar.set(11, 0); calendar.set(12, 0); calendar.set(13, 0);
+		 * calendar.set(14, 0); this.departureDate = calendar.getTime(); }
+		 */
+		return departureDate;
+	}
+
+	public void setDepartureDate(Date departureDate) {
+		this.departureDate = departureDate;
+	}
+
+	public String getOpFlightNum() {
+		return opFlightNum;
+	}
+
+	public void setOpFlightNum(String opFlightNum) {
+
+		/*if (opFlightNum != null && opFlightNum.length() > 0) {
+			this.opFlightNum = opFlightNum.trim();
+
+			while ('0' == this.opFlightNum.charAt(0)) {
+				this.opFlightNum = opFlightNum.replaceFirst("0", "");
+			}
+		} else {
+			this.opFlightNum = opFlightNum;
+		}*/
+		this.opFlightNum = opFlightNum;
+
+	}
+
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public List<String> getOpeList() {
+		if (this.opeList == null) {
+			this.opeList = new ArrayList<String>();
+			this.opeList.add("ALL");
+		}
+		return opeList;
+	}
+
+	public void setOpeList(List<String> opeList) {
+		this.opeList = opeList;
+	}
+
+	public List<String> getFfpList() {
+		if (this.ffpList == null) {
+			this.ffpList = new ArrayList<String>();
+			this.ffpList.add("ALL");
+		}
+		return ffpList;
+	}
+
+	public void setFfpList(List<String> ffpList) {
+		this.ffpList = ffpList;
+	}
+
+	public List<String> getRecList() {
+		if (this.recList == null) {
+			this.recList = new ArrayList<String>();
+			this.recList.add("ALL");
+		}
+		return this.recList;
+	}
+
+	public void setRecList(List<String> recList) {
+		this.recList = recList;
+	}
+
+	public String getTicketNumber() {
+		return ticketNumber;
+	}
+
+	public void setTicketNumber(String ticketNumber) {/*
+		if (ticketNumber != null && ticketNumber.length() > 0) {
+			this.ticketNumber = ticketNumber.trim();
+
+			while ('0' == this.ticketNumber.charAt(0)) {
+				this.ticketNumber = ticketNumber.replaceFirst("0", "");
+			}
+		} else {
+			this.ticketNumber = ticketNumber;
+		}
+
+	*/
+		this.ticketNumber = ticketNumber;
+		}
+
+	public String getErrorCode() {
+		return errorCode;
+	}
+
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
+	}
+
+	public boolean isShowAllDetails() {
+		return showAllDetails;
+	}
+
+	public void setShowAllDetails(boolean showAllDetails) {
+		this.showAllDetails = showAllDetails;
+	}
+
+	public String getReceiverAlertCode() {
+		return receiverAlertCode;
+	}
+
+	public void setReceiverAlertCode(String receiverAlertCode) {
+		this.receiverAlertCode = receiverAlertCode;
+	}
+
+	public String getSenderAlertCode() {
+		return senderAlertCode;
+	}
+
+	public void setSenderAlertCode(String senderAlertCode) {
+		this.senderAlertCode = senderAlertCode;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	
+
+}
