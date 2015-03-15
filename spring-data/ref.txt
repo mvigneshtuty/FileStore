@@ -1,0 +1,4 @@
+http://www.java2s.com/Tutorials/Java/JPA/0020__JPA_Env_Setup.htm
+
+http://www.mkyong.com/spring/spring-aop-transaction-management-in-hibernate/
+
