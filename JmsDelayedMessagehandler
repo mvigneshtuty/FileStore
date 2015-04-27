@@ -1,0 +1,92 @@
+package com.staralliance.pai.onlineretro.handler;
+
+import java.util.Map;
+
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+
+import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.integration.jms.DefaultJmsHeaderMapper;
+import org.springframework.integration.jms.util.JmsAdapterUtils;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessagingException;
+import org.springframework.messaging.support.MessageBuilder;
+
+@MessageEndpoint("delayedMessageHandler")
+public class DelayedMessageHandler {
+
+	private JmsTemplate jmsTemplate;
+
+	@Qualifier("onlineRetroOxmOutboundMessageConverter")
+	@Autowired
+	private MessageConverter converter;
+
+	@Qualifier("onlineRetroOutboundResQ")
+	@Autowired
+	private Destination destination;
+
+	@Value("${outbound.gateway.timeout}")
+	private long gatewayTimeout;
+
+	private String sessionAcknowledgeMode;
+
+	@Autowired
+	public void setJmsTemplate(ConnectionFactory connectionFactory) {
+		this.jmsTemplate = new JmsTemplate(connectionFactory);
+		try {
+			if (this.sessionAcknowledgeMode != null) {
+				Integer acknowledgeMode = JmsAdapterUtils
+						.parseAcknowledgeMode(this.sessionAcknowledgeMode);
+				if (acknowledgeMode != null) {
+					if (JmsAdapterUtils.SESSION_TRANSACTED == acknowledgeMode) {
+						this.jmsTemplate.setSessionTransacted(true);
+					} else {
+						this.jmsTemplate
+								.setSessionAcknowledgeMode(acknowledgeMode);
+					}
+				}
+			}
+		} catch (Exception e) {
+			if (e instanceof RuntimeException) {
+				throw (RuntimeException) e;
+			}
+			throw new BeanInitializationException("failed to initialize", e);
+		}
+	}
+
+	public Message<Object> receive() {
+		Message<Object> convertedMessage = null;
+		javax.jms.Message jmsMessage = this.doReceiveJmsMessage();
+		if (jmsMessage == null) {
+			return null;
+		}
+		try {
+			Map<String, Object> mappedHeaders = new DefaultJmsHeaderMapper()
+					.toHeaders(jmsMessage);
+			Object convertedObject = converter.fromMessage(jmsMessage);
+			convertedMessage = MessageBuilder.withPayload(convertedObject)
+					.copyHeadersIfAbsent(mappedHeaders).build();
+		} catch (Exception e) {
+			throw new MessagingException(e.getMessage(), e);
+		}
+		return convertedMessage;
+	}
+
+	private javax.jms.Message doReceiveJmsMessage() {
+		javax.jms.Message jmsMessage = null;
+		if (this.destination != null) {
+			jmsMessage = this.jmsTemplate
+					.receiveSelected(
+							this.destination,
+							("Timestamp < " + (System.currentTimeMillis() - 1000 - gatewayTimeout)));
+		}
+		return jmsMessage;
+	}
+
+}
